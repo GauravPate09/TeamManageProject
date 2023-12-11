@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List Page</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .member-row:hover {
+            background-color: #f5f5f5;
+            cursor: pointer;
+        }
+        .hover-text {
+            display: none;
+            font-size: 14px;
+            color: #888;
+        }
+        .member-row:hover .hover-text {
+            display: block;
+        }
+
+        .member-row:hover {
+            border: 2px solid #007bff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="header">
+        <h2>Team Members</h2>
+        <a href="/home" class="btn btn-primary">
+            <span style="font-size: 1.5em; line-height: 1;">+</span> Add
+        </a>
+    </div>
+    <p>You have {{ team_members|length }} team members.</p>
+    <table class="table table-striped" id="teamTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Locations</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for member in team_members %}
+                <tr data-member-id="{{ member.id }}" class="member-row">
+                    <td>{{ member.name }}
+                    {% if member.role == "admin" %}
+                    (admin)
+                    {% endif %}
+                    <span class="hover-text">Click to edit this team member</span>
+                    </td>
+                    <td>{{ member.location }}</td>
+                    <td>{{ member.email }}</td>
+                    <td>
+                        <a href="/deleteMember/{{ member.id }}" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+<!--Function for update using click on particular user-->
+
+    $(document).ready(function() {
+        $('#teamTable').on('click', 'tr.member-row', function() {
+            // Toggle the clicked class to add/remove border
+            $(this).toggleClass('clicked');
+
+            var memberId = $(this).data('member-id');
+            window.location.href = '/editMember/' + memberId + '/';
+        });
+    });
+</script>
+</body>
+</html>
